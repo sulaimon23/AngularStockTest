@@ -1,0 +1,607 @@
+<button class="my-3 text-white bg-green-600 px-3 py-2 rounded">
+  <a routerLink="/market"> Page 2 </a>
+</button>
+<div>
+  <p class="text-gray-500 text-xs">MARKET VIEW</p>
+  <h2 class="text-2xl text-gray-800 mt-2 font-semibold">
+    Today's market briefing.
+  </h2>
+  <div
+    class="
+      flex
+      md:flex-row
+      flex-col
+      border-b
+      gap-4
+      pb-8
+      border-gray-200
+      mt-3
+      items-center
+      justify-between
+    "
+  >
+    <div
+      *ngFor="let stock of stocks"
+      class="
+        md:w-1/6
+        w-full
+        flex flex-col
+        justify-between
+        bg-gray-200
+        p-3
+        rounded-md
+        shadow
+        h-32
+      "
+    >
+      <div>
+        <h4 class="text-black font-semibold text-lg">
+          {{ stock?.symbol?.toUpperCase() }}
+        </h4>
+        <p class="text-gray-600 mt-2 text-xs">
+          <!-- {{ stock?.exchange?.toUpperCase() }} -->
+          {{ stock?.exchange }}
+        </p>
+      </div>
+      <div class="text-right">
+        <p class="text-gray-600 text-xs">
+          {{ stock?.open | currency: "USD":"symbol":".2" }}
+        </p>
+        <p
+          class="text-gray-600 mt-2 text-xs"
+          [ngClass]="isNegative() ? 'text-red-700' : 'text-green-700'"
+        >
+          {{ stock?.close - stock?.open | currency: "USD":"symbol":".2" }}
+          ({{
+            (((stock?.close - stock?.open) / stock.open) * 100).toFixed(2)
+          }}%)
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="flex md:flex-row flex-col gap-4 items-start mt-5 justify-between">
+    <div class="md:w-3/4 w-full">
+      <h2 class="text-2xl text-gray-800 mt-2 font-semibold">
+        Sector highlight
+      </h2>
+      <p class="text-gray-500 text-xs">
+        {{ currentDate | date: "dd MMM yyyy hh:mm a" }}
+      </p>
+      <div
+        class="
+          flex
+          md:flex-row
+          flex-col
+          gap-4
+          mt-2
+          justify-between
+          items-center
+        "
+      >
+        <div
+          class="
+            rounded
+            border
+            flex flex-col
+            justify-between
+            h-40
+            md:flex-1
+            w-full
+            border-gray-300
+            p-3
+            bg-cover
+          "
+          [ngStyle]="{
+            'background-image':
+              'url(' +
+              'https://image.shutterstock.com/image-illustration/stock-market-chart-260nw-252511228.jpg' +
+              ')'
+          }"
+        >
+          <h4 class="text-white font-semibold text-md">Health care</h4>
+          <div class="text-right flex justify-end w-full">
+            <p
+              class="text-white bg-red-600 p-1 rounded w-16 text-center text-xs"
+            >
+              {{
+                (
+                  ((stocks[0]?.close - stocks[0]?.open) / stocks[0]?.open) *
+                  100
+                ).toFixed(2)
+              }}%
+            </p>
+          </div>
+        </div>
+        <div
+          class="
+            rounded
+            border
+            flex flex-col
+            justify-between
+            h-40
+            md:flex-1
+            w-full
+            border-gray-300
+            p-3
+            bg-cover
+          "
+          [ngStyle]="{
+            'background-image':
+              'url(' +
+              'https://cdn.britannica.com/18/216518-050-7EA8BFA5/traders-professionals-opening-bell-New-York-Stock-Exchange-NYSE-January-2-2019.jpg' +
+              ')'
+          }"
+        >
+          <h4 class="text-white font-semibold text-md">Industrials</h4>
+          <div class="text-right flex justify-end w-full">
+            <p
+              class="text-white bg-red-600 p-1 rounded w-16 text-center text-xs"
+            >
+              {{
+                (
+                  ((stocks[1]?.close - stocks[1]?.open) / stocks[1].open) *
+                  100
+                ).toFixed(2)
+              }}%
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-200 mt-8">
+        <h2 class="text-xl text-gray-800 mt-2 font-semibold">Ex-Devidends</h2>
+        <div class="flex justify-between border-b mt-2 pb-1 border-gray-200">
+          <p class="text-gray-500 text-sm">Symbol</p>
+          <p class="text-gray-500 text-sm">Amount</p>
+        </div>
+        <p class="text-gray-500 text-xs mt-2">
+          There are no upcoming dividends
+        </p>
+      </div>
+    </div>
+    <div class="shadow rounded p-5">
+      <h2 class="text-2xl text-gray-800 mt-2 font-semibold">
+        My watchlist <mat-icon class="align-middle">grade</mat-icon>
+      </h2>
+      <p class="text-gray-500 text-xs">
+        Your watchlist is empty. Build your watchlist by starring (<mat-icon
+          class="align-middle text-blue-400"
+          >grade</mat-icon
+        >) the stocks you want to follow
+      </p>
+    </div>
+  </div>
+
+  <div class="border-t border-gray-200 mt-12">
+    <h2 class="text-xl text-gray-800 mt-3 font-semibold">Earnings</h2>
+    <div class="flex justify-between border-b mt-2 pb-1 border-gray-200">
+      <p class="text-gray-500 text-sm">Symbol</p>
+      <p class="text-gray-500 text-sm">Company</p>
+      <p class="text-gray-500 text-sm">Fiscal Period</p>
+      <p class="text-gray-500 text-sm md:block hidden">
+        Consensus Estimated EPS
+      </p>
+      <p class="text-gray-500 text-sm md:block hidden">Actual EPS</p>
+      <p class="text-gray-500 text-sm md:block hidden">Surprise</p>
+      <p class="text-gray-500 text-sm md:block hidden">EPS, Year Ago</p>
+      <p class="text-gray-500 text-sm md:block hidden">
+        % Change From Last Year
+      </p>
+    </div>
+  </div>
+  <div class="border-t pb-12 mt-20">
+    <h2 class="text-2xl text-gray-800 mt-5 font-semibold">
+      Sector Performance
+    </h2>
+    <p class="text-gray-500 text-xs">
+      {{ currentDate | date: "dd MMM yyyy hh:mm a" }}
+    </p>
+    <div
+      class="flex md:flex-row flex-col gap-4 mt-5 justify-between items-center"
+    >
+      <div
+        class="
+          rounded
+          border
+          flex flex-col
+          justify-between
+          h-40
+          md:flex-1
+          w-full
+          border-gray-300
+          p-3
+          bg-cover
+          transform
+          transition-all
+          delay-200
+          hover:scale-110
+        "
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            'https://image.shutterstock.com/image-illustration/stock-market-chart-260nw-252511228.jpg' +
+            ')'
+        }"
+      >
+        <h4 class="text-white font-semibold text-md">Health care</h4>
+        <div class="text-right flex justify-end w-full">
+          <p class="text-white bg-red-600 p-1 rounded w-16 text-center text-xs">
+            {{
+              (
+                ((stocks[0]?.close - stocks[0]?.open) / stocks[0].open) *
+                100
+              ).toFixed(2)
+            }}%
+          </p>
+        </div>
+      </div>
+      <div
+        class="
+          rounded
+          border
+          flex flex-col
+          justify-between
+          h-40
+          md:flex-1
+          w-full
+          border-gray-300
+          p-3
+          bg-cover
+          transform
+          transition-all
+          delay-200
+          hover:scale-110
+        "
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            'https://cdn.britannica.com/18/216518-050-7EA8BFA5/traders-professionals-opening-bell-New-York-Stock-Exchange-NYSE-January-2-2019.jpg' +
+            ')'
+        }"
+      >
+        <h4 class="text-white font-semibold text-md">Industrials</h4>
+        <div class="text-right flex justify-end w-full">
+          <p class="text-white bg-red-600 p-1 rounded w-16 text-center text-xs">
+            {{
+              (
+                ((stocks[1]?.close - stocks[1]?.open) / stocks[1].open) *
+                100
+              ).toFixed(2)
+            }}%
+          </p>
+        </div>
+      </div>
+      <div
+        class="
+          rounded
+          border
+          flex flex-col
+          justify-between
+          h-40
+          md:flex-1
+          w-full
+          border-gray-300
+          p-3
+          bg-cover
+          transform
+          transition-all
+          delay-200
+          hover:scale-110
+        "
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            'https://lh3.googleusercontent.com/proxy/lCTtaCqGfSwFkplwPdGtFFwOINxsOf_t7f59PQSc7IzrhIol1iGqWgE3nV9QWhpSFHb9ZqTkoRARLVOE-OFha0WOtJ3dSFAiX9dXJYY4Is6TDu3qY5E' +
+            ')'
+        }"
+      >
+        <h4 class="text-white font-semibold text-md">Utilities</h4>
+        <div class="text-right flex justify-end w-full">
+          <p class="text-white bg-red-600 p-1 rounded w-16 text-center text-xs">
+            {{
+              (
+                ((stocks[2]?.close - stocks[2]?.open) / stocks[2].open) *
+                100
+              ).toFixed(2)
+            }}%
+          </p>
+        </div>
+      </div>
+      <div
+        class="
+          rounded
+          border
+          flex flex-col
+          justify-between
+          h-40
+          md:flex-1
+          w-full
+          border-gray-300
+          p-3
+          bg-cover
+          transform
+          transition-all
+          delay-200
+          hover:scale-110
+        "
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            'https://img.etimg.com/thumb/msid-87855698,width-210,imgsize-18948,,resizemode-4,quality-100/stock-market-volatility.jpg' +
+            ')'
+        }"
+      >
+        <h4 class="text-white font-semibold text-md">Consumer Directories</h4>
+        <div class="text-right flex justify-end w-full">
+          <p class="text-white bg-red-600 p-1 rounded w-16 text-center text-xs">
+            {{
+              (
+                ((stocks[3]?.close - stocks[3]?.open) / stocks[3].open) *
+                100
+              ).toFixed(2)
+            }}%
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex md:flex-row flex-col gap-4 mt-5 justify-between items-center"
+    >
+      <div
+        class="
+          rounded
+          border
+          flex flex-col
+          justify-between
+          h-40
+          md:flex-1
+          w-full
+          border-gray-300
+          p-3
+          bg-cover
+          transform
+          transition-all
+          delay-200
+          hover:scale-110
+        "
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            'https://i0.wp.com/nairametrics.com/wp-content/uploads/2020/06/stock-market1.jpg?fit=900%2C656&ssl=1' +
+            ')'
+        }"
+      >
+        <h4 class="text-white font-semibold text-md">Financials</h4>
+        <div class="text-right flex justify-end w-full">
+          <p class="text-white bg-red-600 p-1 rounded w-16 text-center text-xs">
+            {{
+              (
+                ((stocks[4]?.close - stocks[4]?.open) / stocks[4].open) *
+                100
+              ).toFixed(2)
+            }}%
+          </p>
+        </div>
+      </div>
+      <div
+        class="
+          rounded
+          border
+          flex flex-col
+          justify-between
+          h-40
+          md:flex-1
+          w-full
+          border-gray-300
+          p-3
+          bg-cover
+          transform
+          transition-all
+          delay-200
+          hover:scale-110
+        "
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            'https://www.nasdaq.com/sites/acquia.prod/files/image/29525db076bcc42505a356e55dbe94f38b28530b_getty-stock-market-data.jpg?1241869637' +
+            ')'
+        }"
+      >
+        <h4 class="text-white font-semibold text-md">Consumer Staples</h4>
+        <div class="text-right flex justify-end w-full">
+          <p class="text-white bg-red-600 p-1 rounded w-16 text-center text-xs">
+            {{
+              (
+                ((stocks[2]?.close - stocks[2]?.open) / stocks[2].open) *
+                100
+              ).toFixed(2)
+            }}%
+          </p>
+        </div>
+      </div>
+      <div
+        class="
+          rounded
+          border
+          flex flex-col
+          justify-between
+          h-40
+          md:flex-1
+          w-full
+          border-gray-300
+          p-3
+          bg-cover
+          transform
+          transition-all
+          delay-200
+          hover:scale-110
+        "
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            'https://ei.marketwatch.com/Multimedia/2018/03/30/Photos/ZH/MW-GG561_DJI_20_20180330105510_ZH.jpg?uuid=57e356ee-342a-11e8-978d-ac162d7bc1f7' +
+            ')'
+        }"
+      >
+        <h4 class="text-white font-semibold text-md">Materials</h4>
+        <div class="text-right flex justify-end w-full">
+          <p class="text-white bg-red-600 p-1 rounded w-16 text-center text-xs">
+            {{
+              (
+                ((stocks[0]?.close - stocks[0]?.open) / stocks[0].open) *
+                100
+              ).toFixed(2)
+            }}%
+          </p>
+        </div>
+      </div>
+      <div
+        class="
+          rounded
+          border
+          flex flex-col
+          justify-between
+          h-40
+          md:flex-1
+          w-full
+          border-gray-300
+          p-3
+          bg-cover
+          transform
+          transition-all
+          delay-200
+          hover:scale-110
+        "
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            'https://media.gettyimages.com/photos/stock-market-or-forex-trading-graph-in-graphic-concept-suitable-for-picture-id1201626412?s=612x612' +
+            ')'
+        }"
+      >
+        <h4 class="text-white font-semibold text-md">Technology</h4>
+        <div class="text-right flex justify-end w-full">
+          <p class="text-white bg-red-600 p-1 rounded w-16 text-center text-xs">
+            {{
+              (
+                ((stocks[1]?.close - stocks[1]?.open) / stocks[1].open) *
+                100
+              ).toFixed(2)
+            }}%
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex md:flex-row flex-col gap-4 mt-5 justify-between items-center"
+    >
+      <div
+        class="
+          rounded
+          border
+          flex flex-col
+          justify-between
+          h-40
+          md:flex-1
+          w-full
+          border-gray-300
+          p-3
+          bg-cover
+          transform
+          transition-all
+          delay-200
+          hover:scale-110
+        "
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            'https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/UCY3YMYLOFGPHCBSTIKWR53AW4.jpg' +
+            ')'
+        }"
+      >
+        <h4 class="text-white font-semibold text-md">Real Estate</h4>
+        <div class="text-right flex justify-end w-full">
+          <p class="text-white bg-red-600 p-1 rounded w-16 text-center text-xs">
+            {{
+              (
+                ((stocks[0]?.close - stocks[0]?.open) / stocks[0].open) *
+                100
+              ).toFixed(2)
+            }}%
+          </p>
+        </div>
+      </div>
+      <div
+        class="
+          rounded
+          border
+          flex flex-col
+          justify-between
+          h-40
+          md:flex-1
+          w-full
+          border-gray-300
+          p-3
+          bg-cover
+          transform
+          transition-all
+          delay-200
+          hover:scale-110
+        "
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            'https://www.nasdaq.com/sites/acquia.prod/files/image/29525db076bcc42505a356e55dbe94f38b28530b_getty-stock-market-data.jpg?1241869637' +
+            ')'
+        }"
+      >
+        <h4 class="text-white font-semibold text-md">Consumer Staples</h4>
+        <div class="text-right flex justify-end w-full">
+          <p class="text-white bg-red-600 p-1 rounded w-16 text-center text-xs">
+            {{
+              (
+                ((stocks[1]?.close - stocks[1]?.open) / stocks[1].open) *
+                100
+              ).toFixed(2)
+            }}%
+          </p>
+        </div>
+      </div>
+      <div
+        class="
+          rounded
+          border
+          flex flex-col
+          justify-between
+          h-40
+          md:flex-1
+          w-full
+          border-gray-300
+          p-3
+          bg-cover
+          transform
+          transition-all
+          delay-200
+          hover:scale-110
+        "
+        [ngStyle]="{
+          'background-image':
+            'url(' +
+            'https://ei.marketwatch.com/Multimedia/2018/03/30/Photos/ZH/MW-GG561_DJI_20_20180330105510_ZH.jpg?uuid=57e356ee-342a-11e8-978d-ac162d7bc1f7' +
+            ')'
+        }"
+      >
+        <h4 class="text-white font-semibold text-md">Materials</h4>
+        <div class="text-right flex justify-end w-full">
+          <p class="text-white bg-red-600 p-1 rounded w-16 text-center text-xs">
+            {{
+              (
+                ((stocks[2]?.close - stocks[2]?.open) / stocks[2].open) *
+                100
+              ).toFixed(2)
+            }}%
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

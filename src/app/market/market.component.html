@@ -1,0 +1,53 @@
+<button class="my-3 text-white bg-green-600 px-3 py-2 rounded">
+  <a routerLink="/"> Page 1 </a>
+</button>
+<div
+  *ngFor="let blog of blogData"
+  class="border-b md:w-3/4 m-auto divide-y-2 divide-gray-100"
+>
+  <div class="py-8 flex gap-4 flex-wrap md:flex-nowrap">
+    <div
+      *ngIf="blog.image"
+      class="
+        md:w-64
+        bg-cover
+        object-cover
+        h-40
+        md:mb-0
+        mb-6
+        flex-shrink-0 flex flex-col
+      "
+    >
+      <img
+        src="{{ blog.image }}"
+        class="object-cover h-full w-full rounded"
+        alt="image"
+      />
+    </div>
+    <div
+      *ngIf="!blog.image"
+      class="
+        md:w-64
+        h-40
+        rounded
+        bg-black
+        md:mb-0
+        mb-6
+        flex-shrink-0 flex flex-col
+      "
+    ></div>
+    <div class="md:flex-grow">
+      <h2 class="text-2xl font-medium text-gray-900 title-font mb-2">
+        {{ blog.title }}
+      </h2>
+      <p class="leading-relaxed text-blue-900">
+        {{ blog.description }}
+      </p>
+      <p class="mt-5">
+        <span class="mt-1 text-gray-600 text-sm">{{
+          blog.published_at | dateAgo
+        }}</span>
+      </p>
+    </div>
+  </div>
+</div>
