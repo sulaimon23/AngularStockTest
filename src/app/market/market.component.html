@@ -10,11 +10,11 @@
       *ngIf="blog.image"
       class="
         md:w-64
+        w-full
         bg-cover
         object-cover
-        h-40
+        h-48
         md:mb-0
-        mb-6
         flex-shrink-0 flex flex-col
       "
     >
@@ -28,7 +28,8 @@
       *ngIf="!blog.image"
       class="
         md:w-64
-        h-40
+        w-full
+        h-48
         rounded
         bg-black
         md:mb-0
@@ -37,14 +38,14 @@
       "
     ></div>
     <div class="md:flex-grow">
-      <h2 class="text-2xl font-medium text-gray-900 title-font mb-2">
+      <h2 class="md:text-2xl text-md font-medium text-gray-900 title-font mb-2">
         {{ blog.title }}
       </h2>
-      <p class="leading-relaxed text-blue-900">
+      <p class="leading-relaxed text-xs md:text-base text-blue-900">
         {{ blog.description }}
       </p>
       <p class="mt-5">
-        <span class="mt-1 text-gray-600 text-sm">{{
+        <span class="mt-1 text-xs md:text-sm text-gray-600">{{
           blog.published_at | dateAgo
         }}</span>
       </p>
